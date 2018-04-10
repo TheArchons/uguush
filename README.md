@@ -3,10 +3,10 @@ uguush
 
 command-line uploader for various file hosts
 
-![](https://u.teknik.io/WldwN2.png)
+![Usage](https://u.teknik.io/WldwN2.png)
 
 Usage
-=====
+-----
 
 uguush [options]
 
@@ -22,7 +22,7 @@ Options:
 
 `-s` Take a selection screenshot.
 
-`-u` <file> Upload a file.
+`-u <file>` Upload a file.
 
 `-w` Take a window screenshot.
 
@@ -30,27 +30,33 @@ Options:
 
 `-S` Select a shortener to use. Can be waaai, ptpb, or 0x0.
 
+`-i` Apply shadow effect to window screenshot using ImageMagick.
+
 `-l` Re-upload the given url.
- 
- `-p` <path>    Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png"
+
+`-p <path>` Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png"
+
+`-k` Use Spectacle of KDE Plasma.
 
 Requirements
-============
+------------
 
 - curl
 - libnotify (for notifications)
 - maim (for screenshot)
 - slop (for selection capture)
 - xclip (for clip-board support)
-- xprop (for current window capture)
+- xdotool (for current window capture)
+- ImageMagick (optional, only for `-i` option)
+- Spectacle (optional, only for `-k` option)
 
 Todo
-====
+----
 
 POSIX sh compliance.
 
 Credit
-======
+------
 
 Big thanks to [neku](https://github.com/nokonoko) for creating pomf and uguu!
 
