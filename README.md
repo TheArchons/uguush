@@ -3,7 +3,7 @@ uguush
 
 command-line uploader for various file hosts
 
-![Usage](https://the.fiery.me/TbDv.png)
+![Usage](https://the.fiery.me/qkmO.png)
 
 Usage
 -----

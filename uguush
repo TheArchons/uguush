@@ -10,14 +10,9 @@ c0="$(tput sgr0)"
 c1="$(tput setaf 1)"
 c2="$(tput setaf 2)"
 
-# filename to use for screenshots
-localTemp="$(mktemp)"
-
 # screenshot functions
 capFullscreen() {
-	localFile="${localTemp}.png"
-	mv "${localTemp}" "${localFile}"
-	if [ "${useSpectacle}" ]; then
+	if [ "${useSpectacle}" = 'true' ]; then
 		spectacle -bno "${localFile}"
 	else
 		maim -u "${localFile}"
@@ -25,9 +20,7 @@ capFullscreen() {
 }
 
 capSelection() {
-	localFile="${localTemp}.png"
-	mv "${localTemp}" "${localFile}"
-	if [ "${useSpectacle}" ]; then
+	if [ "${useSpectacle}" = 'true' ]; then
 		spectacle -rbno "${localFile}"
 	else
 		maim -su "${localFile}"
@@ -35,11 +28,9 @@ capSelection() {
 }
 
 capWindow() {
-	localFile="${localTemp}.png"
-	mv "${localTemp}" "${localFile}"
-	if [ "${useSpectacle}" ]; then
+	if [ "${useSpectacle}" = 'true' ]; then
 		spectacle -abno "${localFile}"
-	elif [ "${doWindowShadow}" ]; then
+	elif [ "${doWindowShadow}" = 'true' ]; then
 		maim -u -i $(xdotool getactivewindow) |
 		convert - \( +clone -background black -shadow 60x30+0+0 \) +swap -background none -layers merge +repage "${localFile}"
 	else
@@ -80,6 +71,7 @@ Options:
 	-h		Show this help message.
 	-o		Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd or lolisafe.
 	-p <path>	Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
+	-n		Enable save notification (if used alongside -p option).
 	-s		Take a selection screenshot.
 	-u <file>	Upload a file.
 	-x		Do not notify dbus, update the log, or modify the clipboard.
@@ -88,7 +80,7 @@ Options:
 	-i		Apply shadow effect to window screenshot using ImageMagick.
 	-l <url>	Upload the file at the provided URL.
 	-k		Use Spectacle of KDE Plasma (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
-	-t		Set token (only for lolisafe host).
+	-t <token>	Set token (only for lolisafe host).
 
 EOF
 }
@@ -101,17 +93,13 @@ delay() {
 }
 
 screenshot() {
-	if [ "${doFullscreen}" ]; then
+	if [ "${doFullscreen}" = 'true' ]; then
 		capFullscreen
-	elif [ "${doSelection}" ]; then
-		capSelection &> /dev/null
-		if ! [ -s "${localFile}" ]; then
-			$(rm "${localFile}" 2> /dev/null)
-			exit
-		fi
-	elif [ "${doWindow}" ]; then
+	elif [ "${doSelection}" = 'true' ]; then
+		capSelection
+	elif [ "${doWindow}" = 'true' ]; then
 		capWindow
-	elif [ "${doURL}" ]; then
+	elif [ "${doURL}" = 'true' ]; then
 		if [ -f "/usr/share/mime/globs" ]; then
 			urlExtension="$(curl -sf --head "${remoteURL}" | grep 'Content-Type: ' | head -1 | grep -Po '(?<=\ )[^\;]*')"
 			urlExtension="$(echo "${urlExtension}" | sed -e "s/\\r//")"
@@ -122,6 +110,10 @@ screenshot() {
 		fi
 		localFile="${localTemp}.${urlExtension}"
 		$(curl -sf "${remoteURL}" > "${localFile}")
+	fi
+
+	if [ "${notifySave}" = 'true' ] && [ "${saveToPath}" = 'true' ]; then
+		notify-send "uguu~" "A screenshot was saved as '${dateFilename}' to '${pathToSave}'" -h string:x-canonical-private-synchronous:uguush
 	fi
 }
 
@@ -203,7 +195,7 @@ upload() {
 					echo -n "${finalResult}" | xclip -selection primary
 					echo -n "${finalResult}" | xclip -selection clipboard
 					echo "$(date +"%D %R") | "${file}" | "${finalResult}"" >> ~/.uguush.log
-					notify-send 'uguu~' "${finalResult}"
+					notify-send "uguu~" "Link copied to clipboard: '${finalResult}'" -h string:x-canonical-private-synchronous:uguush
 			fi
 		fi
 
@@ -211,7 +203,7 @@ upload() {
 		echo "File has been uploaded: ${finalResult}"
 
 		# if we took a screenshot, remove the temporary file
-		if [ -z "${doFile}" ]; then
+		if [ -z "${doFile}" ] && [ -z "${saveToPath}" ]; then
 			rm "${localFile}"
 		fi
 
@@ -222,21 +214,24 @@ upload() {
 
 path() {
 	if [ "${saveToPath}" = 'true' ]; then
-		localFilename=$(basename "${localFile}")
-		extension="${localFilename##*.}"
 		if [ "${useSpectacle}" = 'true' ]; then
 			# this is Spectacle's default naming format
-			dateFilename="$(date '+Screenshot_%Y%m%d_%H%M%S').${extension}";
+			dateFilename="$(date '+Screenshot_%Y%m%d_%H%M%S').png";
 		else
-			dateFilename="$(date '+%Y-%m-%d %H-%M-%S').${extension}";
+			dateFilename="$(date '+%Y-%m-%d %H-%M-%S').png";
 		fi
-		cp ${localFile} "${pathToSave}/${dateFilename}"
+		localFile="${pathToSave}/${dateFilename}"
+	else
+		# filename to use for screenshots
+		localTemp="$(mktemp)"
+		localFile="${localTemp}.png"
+		mv "${localTemp}" "${localFile}"
 	fi
 }
 
 ## PARSE OPTIONS
 
-while getopts :d:fhikl:o:p:st:u:wxS: opt ;do
+while getopts :d:fhikl:no:p:st:u:wxS: opt ;do
 	case "${opt}" in
 		d)
 			# set delay value
@@ -258,6 +253,9 @@ while getopts :d:fhikl:o:p:st:u:wxS: opt ;do
 			# set url to upload
 			doURL='true'
 			remoteURL="${OPTARG}" ;;
+		n)
+			# enable save notification
+			notifySave='true' ;;
 		o)
 			# set host
 			[[ "${hosts}" =~ "${OPTARG}" ]] && host="${OPTARG}" || exit 1 ;;
@@ -302,8 +300,8 @@ fi
 
 depends
 delay
-screenshot
 path
+screenshot
 upload
 
 # if the program doesn't exit at the for-loop, the upload failed
