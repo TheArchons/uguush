@@ -20,6 +20,10 @@ Options:
 
 `-o` Select a host to use. Can be uguu, teknik, 0x0, ptpb, maxfile, or mixtape.
 
+`-p <path>` Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png"
+
+`-n` Enable save notification (if used alongside -p option).
+
 `-s` Take a selection screenshot.
 
 `-u <file>` Upload a file.
@@ -32,11 +36,11 @@ Options:
 
 `-i` Apply shadow effect to window screenshot using ImageMagick.
 
-`-l` Re-upload the given url.
+`-l <url>` Re-upload the given url.
 
-`-p <path>` Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png"
+`-k` Use Spectacle of KDE Plasma (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
 
-`-k` Use Spectacle of KDE Plasma.
+`-t <token>` Set token (only for lolisafe host).
 
 Requirements
 ------------
