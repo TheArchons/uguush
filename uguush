@@ -42,9 +42,9 @@ capWindow() {
 delaySeconds='0'
 
 # hosts and shorteners
-host='lolisafe'
+host='fiery'
 shortener=
-hosts='uguu teknik 0x0 mixtape ptpb lewd lolisafe'
+hosts='uguu teknik 0x0 mixtape ptpb lewd fiery'
 shorteners='waaai 0x0'
 
 ## FUNCTIONS
@@ -69,7 +69,7 @@ Options:
 	-d		Delay the screenshot by the specified number of seconds.
 	-f		Take a fullscreen screenshot.
 	-h		Show this help message.
-	-o		Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd or lolisafe.
+	-o		Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd or fiery.
 	-p <path>	Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
 	-n		Enable save notification (if used alongside -p option).
 	-s		Take a selection screenshot.
@@ -80,7 +80,8 @@ Options:
 	-i		Apply shadow effect to window screenshot using ImageMagick.
 	-l <url>	Upload the file at the provided URL.
 	-k		Use Spectacle of KDE Plasma (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
-	-t <token>	Set token (only for lolisafe host).
+	-t <token>	Set token (only for fiery host).
+	-a <id>		Set numerical ID of an album (only for fiery host).
 
 EOF
 }
@@ -128,7 +129,7 @@ upload() {
 			ptpb) hostURL='https://ptpb.pw/' ;;
 			mixtape) hostURL='https://mixtape.moe/upload.php' ;;
 			lewd) hostURL='https://lewd.se/api.php?d=upload-tool' ;;
-			lolisafe) hostURL='https://safe.fiery.me/api/upload' ;;
+			fiery) hostURL='https://safe.fiery.me/api/upload' ;;
 		esac
 
 		case "${shortener}" in
@@ -155,12 +156,8 @@ upload() {
 			uploadResult="${uploadResult%%$'\n'*}"
 		elif [ "${host}" = 'lewd' ]; then
 			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
-		elif [ "${host}" = 'lolisafe' ]; then
-			if [ "${useLolisafeToken}" = 'true' ]; then
-				uploadResult="$(curl -H "token: ${lolisafeToken}" -sf -F files[]="@${localFile}" "${hostURL}")"
-			else
-				uploadResult="$(curl -sf -F files[]="@${localFile}" "${hostURL}")"
-			fi
+		elif [ "${host}" = 'fiery' ]; then
+			uploadResult="$(curl -H "token: ${fieryToken}" -H "albumid: ${fieryAlbumId}" -sf -F files[]="@${localFile}" "${hostURL}")"
 			uploadResult="$(echo "${uploadResult}" | grep -Eo '"url":"[A-Za-z0-9]+.*"' | sed 's/"url":"//;s/"//')"
 		fi
 
@@ -231,8 +228,11 @@ path() {
 
 ## PARSE OPTIONS
 
-while getopts :d:fhikl:no:p:st:u:wxS: opt ;do
+while getopts :a:d:fhikl:no:p:st:u:wxS: opt ;do
 	case "${opt}" in
+		a)
+			# set fiery album id
+			fieryAlbumId="${OPTARG}" ;;
 		d)
 			# set delay value
 			delaySeconds="${OPTARG}" ;;
@@ -267,9 +267,8 @@ while getopts :d:fhikl:no:p:st:u:wxS: opt ;do
 			# take shot of selection
 			doSelection='true' ;;
 		t)
-			# use lolisafe token
-			useLolisafeToken='true'
-			lolisafeToken="${OPTARG}" ;;
+			# use fiery token
+			fieryToken="${OPTARG}" ;;
 		u)
 			# change $file to the specified file with -u
 			doFile='true'
