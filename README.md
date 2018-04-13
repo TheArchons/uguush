@@ -46,12 +46,12 @@ Options:
 
 - curl
 - libnotify (for notifications)
-- maim (for screenshot)
-- slop (for selection capture)
+- maim (for screenshot, optional if using `-k`)
+- slop (for selection capture, optional if using `-k`)
 - xclip (for clip-board support)
 - xdotool (for current window capture)
 - ImageMagick (optional, only for `-i` option)
-- Spectacle (optional, only for `-k` option)
+- Spectacle (optional unless using `-k` option, in which main and slop will become optional instead)
 
 ## Todo
 
