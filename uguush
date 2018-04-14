@@ -3,8 +3,6 @@
 # uguush - command-line uploader for uguu.se and others
 #
 
-set -e
-set -o pipefail
 ## CONFIGURATION
 
 # colors
@@ -23,9 +21,11 @@ capFullscreen() {
 
 capSelection() {
 	if [ "${useSpectacle}" = 'true' ]; then
-		spectacle -rbno "${localFile}"
+		if [ -n "$(spectacle -rbno "${localFile}" 2>&1)" ]; then
+			exit 1
+		fi
 	else
-		maim -su "${localFile}"
+		maim -su "${localFile}" || exit 1
 	fi
 }
 
