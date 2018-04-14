@@ -3,6 +3,8 @@
 # uguush - command-line uploader for uguu.se and others
 #
 
+set -e
+set -o pipefail
 ## CONFIGURATION
 
 # colors
