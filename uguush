@@ -46,7 +46,7 @@ delaySeconds='0'
 # hosts and shorteners
 host='fiery'
 shortener=
-hosts='uguu teknik 0x0 mixtape ptpb lewd fiery'
+hosts='uguu teknik 0x0 ptpb mixtape lewd fiery'
 shorteners='waaai 0x0'
 
 ## FUNCTIONS
