@@ -22,10 +22,10 @@ capFullscreen() {
 capSelection() {
 	if [ "${useSpectacle}" = 'true' ]; then
 		if [ -n "$(spectacle -rbno "${localFile}" 2>&1)" ]; then
-			exit 1
+			delTemp
 		fi
 	else
-		maim -su "${localFile}" || exit 1
+		maim -su "${localFile}" || delTemp
 	fi
 }
 
@@ -231,6 +231,13 @@ path() {
 		localFile="${localTemp}.png"
 		mv "${localTemp}" "${localFile}"
 	fi
+}
+
+delTemp() {
+	if [ -f "${localFile}" ]; then
+		rm "${localFile}"
+	fi
+	exit 1
 }
 
 ## PARSE OPTIONS
