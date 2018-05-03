@@ -38,7 +38,7 @@ Options:
 
 `-k` Use Spectacle of KDE Plasma (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
 
-`-t <token>` Set token (only for lolisafe host).
+`-t <token>` Set token (only for fiery host).
 
 `-a <id>` Set numerical ID of an album (only for fiery host).
 
