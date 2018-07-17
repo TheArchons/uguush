@@ -19,19 +19,19 @@ localTemp="$(mktemp)"
 capFullscreen() {
 	localFile="${localTemp}.png"
 	mv "${localTemp}" "${localFile}"
-	maim -u "${localFile}"
+	$screenshotFullscreen "${localFile}"
 }
 
 capSelection() {
 	localFile="${localTemp}.png"
 	mv "${localTemp}" "${localFile}"
-	maim -us "${localFile}"
+	$screenshotSelection "${localFile}"
 }
 
 capWindow() {
 	localFile="${localTemp}.png"
 	mv "${localTemp}" "${localFile}"
-	maim -ui $(xdotool getactivewindow) "${localFile}"
+	$screenshotWindow $(xdotool getactivewindow) "${localFile}"
 }
 
 # delay
@@ -87,6 +87,20 @@ delay() {
 }
 
 screenshot() {
+	if [ -x "$(command -v maim)" ]; then
+		screenshotFullscreen="maim -u"
+		screenshotSelection="maim -us"
+		screenshotWindow="maim -ui $(xdotool getactivewindow)"
+	elif [ -x "$(command -v scrot)" ]; then
+		screenshotFullscreen="scrot"
+		screenshotSelection="scrot -s"
+		screenshotWindow="scrot -u"
+	elif [ "${doFullscreen}" ] || [ "${doSelection}" ] || [ "${doWindow}" ]; then 
+		echo "Checking for a screenshot utility... [${c1}FAILED${c0}]" >&2
+		echo "could not find a screenshot utility, please install 'maim' or 'scrot'" >&2
+		exit 1
+	fi
+
 	if [ "${doFullscreen}" ]; then
 		capFullscreen
 	elif [ "${doSelection}" ]; then
