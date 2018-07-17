@@ -43,8 +43,6 @@ Options:
 
 ## Todo
 
-POSIX sh compliance.
-
 ## Credit
 
 Huge thanks to all [GitHub contributors](https://github.com/jschx/uguush/graphs/contributors).
