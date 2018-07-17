@@ -36,14 +36,12 @@ Options:
 
 - curl
 - libnotify (for notifications)
-- maim (for screenshot)
+- maim or scrot (for screenshot)
 - slop (for selection capture)
 - xclip (for clip-board support)
 - xprop (for current window capture)
 
 ## Todo
-
-POSIX sh compliance.
 
 ## Credit
 
