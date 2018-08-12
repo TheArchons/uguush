@@ -40,7 +40,7 @@ delaySeconds='0'
 # hosts and shorteners
 host='uguu'
 shortener=
-hosts='uguu teknik 0x0 ptpb mixtape lewd fiery doko'
+hosts='uguu 0x0 ptpb mixtape lewd fiery doko'
 shorteners='waaai 0x0'
 
 ## FUNCTIONS
@@ -65,7 +65,7 @@ Options:
 	-d		Delay the screenshot by the specified number of seconds.
 	-f		Take a fullscreen screenshot.
 	-h		Show this help message.
-	-o		Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko.
+	-o		Select a host to use. Can be uguu, 0x0, ptpb, mixtape, lewd, fiery or doko.
 	-p <path>	Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
 	-s		Take a selection screenshot.
 	-u <file>	Upload a file.
@@ -132,7 +132,6 @@ upload() {
 		i="$((i+1))"
 
 		case "${host}" in
-			teknik) hostURL='https://api.teknik.io/v1/Upload' ;;
 			0x0) hostURL='https://0x0.st/' ;;
 			uguu) hostURL='https://uguu.se/api.php?d=upload-tool' ;;
 			ptpb) hostURL='https://ptpb.pw/' ;;
@@ -152,10 +151,6 @@ upload() {
 			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
 		elif [ "${host}" = '0x0' ]; then
 			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
-		elif [ "${host}" = 'teknik' ]; then
-			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
-			uploadResult="${uploadResult##*url\":\"}"
-			uploadResult="${uploadResult%%\"*}"
 		elif [ "${host}" = 'mixtape' ]; then
 			uploadResult="$(curl -sf -F files[]="@${localFile}" "${hostURL}")"
 			uploadResult="$(echo "${uploadResult}" | grep -Po '"url":"[A-Za-z0-9]+.*?"' | sed 's/"url":"//;s/"//')"
