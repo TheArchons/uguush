@@ -260,6 +260,7 @@ while getopts :d:fhl:o:p:su:wxS: opt ;do
 				if [ "${OPTARG}" = "${available}" ]; then
 					host="${OPTARG}"
 					hostcheck=true
+					break
 				fi
 			done
 			[ "${hostcheck}" ] || exit 1 ;;
@@ -295,6 +296,7 @@ while getopts :d:fhl:o:p:su:wxS: opt ;do
 				if [ "${OPTARG}" = "${available}" ]; then
 					shortener="${OPTARG}"
 					shortenercheck=true
+					break
 				fi
 			done
 			[ "${shortenercheck}" ] || exit 1 ;;
