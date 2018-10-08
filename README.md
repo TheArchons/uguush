@@ -2,7 +2,7 @@
 
 command-line uploader for various file hosts
 
-![Usage](https://the.fiery.me/ML7u.png)
+![Usage](https://i.fiery.me/YB00.png)
 
 ## Usage
 

@@ -116,7 +116,7 @@ screenshot() {
 	fi
 
 	if [ "${notifySave}" = 'true' ] && [ "${saveToPath}" = 'true' ]; then
-		notify-send "uguu~" "A screenshot was saved as '${dateFilename}' to '${pathToSave}'" -h string:x-canonical-private-synchronous:uguush
+		notify-send "uguu~" "A screenshot was saved as '${dateFilename}' to '${pathToSave}'" -h string:x-canonical-private-synchronous:uguush -i document-save
 	fi
 }
 
@@ -199,7 +199,7 @@ upload() {
 					echo -n "${finalResult}" | xclip -selection primary
 					echo -n "${finalResult}" | xclip -selection clipboard
 					echo "$(date +"%D %R") | "${file}" | "${finalResult}"" >> ~/.uguush.log
-					notify-send "uguu~" "Link copied to clipboard: '${finalResult}'" -h string:x-canonical-private-synchronous:uguush
+					notify-send "uguu~" "Link copied to clipboard: '${finalResult}'" -h string:x-canonical-private-synchronous:uguush -i up
 			fi
 		fi
 
