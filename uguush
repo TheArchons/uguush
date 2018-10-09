@@ -82,8 +82,9 @@ Options:
 	-i		Apply shadow effect to window screenshot using ImageMagick.
 	-l <url>	Upload the file at the provided URL.
 	-k		Use Spectacle of KDE Plasma (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
-	-t <token>	Set token (only for fiery host).
-	-a <id>		Set numerical ID of an album (only for fiery host).
+	-t <token>	Set token (for fiery host).
+	-a <id>		Set numerical ID of an album (for fiery host).
+	-D <domain> Set domain (for fiery host; only the hostname, without protocol).
 
 EOF
 }
@@ -162,6 +163,9 @@ upload() {
 		elif [ "${host}" = 'fiery' ]; then
 			uploadResult="$(curl -H "token: ${fieryToken}" -H "albumid: ${fieryAlbumId}" -sf -F files[]="@${localFile}" "${hostURL}")"
 			uploadResult="$(echo "${uploadResult}" | grep -Po '"url":"[A-Za-z0-9]+.*?"' | sed 's/"url":"//;s/"//')"
+			if [ "${fieryDomain}" ]; then
+				uploadResult="$(echo "${uploadResult}" | sed "s/i.fiery.me/${fieryDomain}/")"
+			fi
 		elif [ "${host}" = 'doko' ]; then
 			uploadResult="$(curl -sf -F files[]="@${localFile}" "${hostURL}")"
 			uploadResult="$(echo "${uploadResult}" | grep -Po '"url":"[A-Za-z0-9]+.*?"' | sed 's/"url":"//;s/"//')"
@@ -242,7 +246,7 @@ delTemp() {
 
 ## PARSE OPTIONS
 
-while getopts :a:d:fhikl:no:p:st:u:wxS: opt ;do
+while getopts :a:d:fhikl:no:p:st:u:wxD:S: opt ;do
 	case "${opt}" in
 		a)
 			# set fiery album id
@@ -293,6 +297,9 @@ while getopts :a:d:fhikl:no:p:st:u:wxS: opt ;do
 		x)
 			# do not notify dbus, update log, or modify clipboard
 			noComms='true' ;;
+		D)
+			# set fiery domain
+			fieryDomain="${OPTARG}" ;;
 		S)
 			# set shortener
 			[[ "${shorteners}" =~ "${OPTARG}" ]] && shortener="${OPTARG}" || exit 1 ;;
