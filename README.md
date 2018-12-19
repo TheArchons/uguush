@@ -2,7 +2,7 @@
 
 command-line uploader for various file hosts
 
-![Usage](https://i.fiery.me/oJAo.png)
+![Usage](https://i.fiery.me/3uG3.png)
 
 ## Usage
 
@@ -16,7 +16,7 @@ Options:
 
 `-h` Show this help message.
 
-`-o <host>` Select which host to use (uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko).
+`-o <host>` Select which host to use (uguu, 0x0, ptpb, mixtape, lewd, fiery or doko).
 
 `-p <path>` Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png"
 
