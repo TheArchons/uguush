@@ -54,19 +54,22 @@ So, the `-D <domain>` option was added to automatically replace i.fiery.me with 
 
 Do remember it's only a redirect, so when people visit the link with the custom domain, they will only be redirected to the actual file in i.fiery.me.
 
+## Screenshot tool requirements
+
+You need to have ANY (not ALL) of the following tools:
+
+- [maim](https://github.com/naelstrof/maim) & [slop](https://github.com/naelstrof/slop) (default)
+- scrot (fallback when maim & slop are missing)
+- [KDE/Spectacle](https://www.kde.org/applications/graphics/spectacle/) (with `-k` option)
+
 ## Requirements
 
 - curl
 - libnotify (for notifications)
-- maim (for screenshot, optional if using `-k`)
-- slop (for selection capture, optional if using `-k`)
-- xclip (for clip-board support)
-- xdotool (for current window capture)
-- [KDE/Spectacle](https://www.kde.org/applications/graphics/spectacle/) (optional unless using `-k` option, in which main and slop will become optional instead)
+- xclip (for clipboard support)
+- xdotool (for current window capture, optional with `-k` option)
 
 ## Todo
-
-POSIX sh compliance.
 
 ## Credit
 
