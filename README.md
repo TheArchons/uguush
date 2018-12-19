@@ -2,7 +2,7 @@
 
 command-line uploader for various file hosts
 
-![Usage](https://i.fiery.me/YB00.png)
+![Usage](https://i.fiery.me/oJAo.png)
 
 ## Usage
 
@@ -16,7 +16,7 @@ Options:
 
 `-h` Show this help message.
 
-`-o <host>` Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko.
+`-o <host>` Select which host to use (uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko).
 
 `-p <path>` Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png"
 
@@ -32,11 +32,9 @@ Options:
 
 `-S` Select a shortener to use. Can be waaai or 0x0.
 
-`-i` Apply shadow effect to window screenshot using ImageMagick.
-
 `-l <url>` Upload the file at the provided URL.
 
-`-k` Use Spectacle of KDE Plasma (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
+`-k` Use KDE/Spectacle (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
 
 `-t <token>` Set token (only for fiery host).
 
@@ -64,8 +62,7 @@ Do remember it's only a redirect, so when people visit the link with the custom 
 - slop (for selection capture, optional if using `-k`)
 - xclip (for clip-board support)
 - xdotool (for current window capture)
-- ImageMagick (optional, only for `-i` option)
-- Spectacle (optional unless using `-k` option, in which main and slop will become optional instead)
+- [KDE/Spectacle](https://www.kde.org/applications/graphics/spectacle/) (optional unless using `-k` option, in which main and slop will become optional instead)
 
 ## Todo
 
