@@ -16,7 +16,7 @@ Options:
 
 `-h` Show this help message.
 
-`-o` Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko.
+`-o <host>` Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko.
 
 `-p <path>` Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png"
 
@@ -41,6 +41,20 @@ Options:
 `-t <token>` Set token (only for fiery host).
 
 `-a <id>` Set numerical ID of an album (only for fiery host).
+
+`-D <domain>` Set custom fiery domain (only the hostname without protocol).
+
+## Custom fiery domain
+
+safe.fiery.me have some custom domains which redirects to i.fiery.me (the domain which serve all the files uploaded into safe.fiery.me), such as:
+
+- nekos.will-always-want.me
+- everyone.will-always-want.me
+- [and more (the article's comments)](https://blog.fiery.me/2018/09/29/Extra-domain/)
+
+So, the `-D <domain>` option was added to automatically replace i.fiery.me with your desired domain.
+
+Do remember it's only a redirect, so when people visit the link with the custom domain, they will only be redirected to the actual file in i.fiery.me.
 
 ## Requirements
 

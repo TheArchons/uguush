@@ -21,8 +21,9 @@ capFullscreen() {
 
 capSelection() {
 	if [ "${useSpectacle}" = 'true' ]; then
-		if [ -n "$(spectacle -rbno "${localFile}" 2>&1)" ]; then
-			delTemp
+		spectacle -rbno "${localFile}"
+		if [ ! -f "${localFile}" ]; then
+			exit 1
 		fi
 	else
 		maim -su "${localFile}" || delTemp
@@ -71,7 +72,7 @@ Options:
 	-d		Delay the screenshot by the specified number of seconds.
 	-f		Take a fullscreen screenshot.
 	-h		Show this help message.
-	-o		Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko.
+	-o <host>	Select a host to use. Can be uguu, teknik, 0x0, ptpb, mixtape, lewd, fiery or doko.
 	-p <path>	Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
 	-n		Enable save notification (if used alongside -p option).
 	-s		Take a selection screenshot.
@@ -84,7 +85,7 @@ Options:
 	-k		Use Spectacle of KDE Plasma (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
 	-t <token>	Set token (for fiery host).
 	-a <id>		Set numerical ID of an album (for fiery host).
-	-D <domain> Set domain (for fiery host; only the hostname, without protocol).
+	-D <domain>	Set custom fiery domain (only the hostname without protocol).
 
 EOF
 }
@@ -230,10 +231,15 @@ path() {
 		fi
 		localFile="${pathToSave}/${dateFilename}"
 	else
-		# filename to use for screenshots
-		localTemp="$(mktemp)"
-		localFile="${localTemp}.png"
-		mv "${localTemp}" "${localFile}"
+		if [ "${useSpectacle}" = 'true' ]; then
+			# if using Spectacle, just generate a temp name
+			localFile="$(mktemp -u).png"
+		else
+			# filename to use for screenshots
+			localTemp="$(mktemp)"
+			localFile="${localTemp}.png"
+			mv "${localTemp}" "${localFile}"
+		fi
 	fi
 }
 
