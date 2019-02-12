@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 #
 # uguush - command-line uploader for uguu.se and others
 #
