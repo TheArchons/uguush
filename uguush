@@ -67,6 +67,7 @@ Options:
 	-h		Show this help message.
 	-o <host>	Select which host to use (uguu, 0x0, ptpb, mixtape, lewd, fiery or doko).
 	-p <path>	Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
+	-c		Copy image instead of URL to clipboard.
 	-n		Enable save notification (if used alongside -p option).
 	-s		Take a selection screenshot.
 	-u <file>	Upload a file.
@@ -212,10 +213,24 @@ upload() {
 
 			# copy to clipboard, log, and notify (unless $noComms is set)
 			if [ ! "${noComms}" ]; then
+
+				# copy image to clipboard
+				if [ "${copyImage}" = 'true' ]; then
+					mimeType=$(file -b --mime-type "$localFile")
+					xclip -selection primary -t "$mimeType" < "$localFile"
+					xclip -selection clipboard -t "$mimeType" < "$localFile"
+					notifyMessage="Image copied to clipboard"
+					notifyIcon="edit-copy"
+				else
 					echo -n "${finalResult}" | xclip -selection primary
 					echo -n "${finalResult}" | xclip -selection clipboard
-					echo "$(date +"%D %R") | "${file}" | "${finalResult}"" >> ~/.uguush.log
-					notify-send "uguu~" "Link copied to clipboard: '${finalResult}'" -h string:x-canonical-private-synchronous:uguush -i up
+					notifyMessage="Link copied to clipboard: '${finalResult}'"
+					notifyIcon="url-copy"
+				fi
+
+				echo "$(date +"%D %R") | "${file}" | "${finalResult}"" >> ~/.uguush.log
+				notify-send "uguu~" "${notifyMessage}" -h string:x-canonical-private-synchronous:uguush -i "$notifyIcon"
+
 			fi
 		fi
 
@@ -250,11 +265,14 @@ path() {
 
 ## PARSE OPTIONS
 
-while getopts :a:d:fhikl:no:p:st:u:wxD:S: opt ;do
+while getopts :a:cd:fhikl:no:p:st:u:wxD:S: opt ;do
 	case "${opt}" in
 		a)
 			# set fiery album id
 			fieryAlbumId="${OPTARG}" ;;
+		c)
+			# copy image to clipboard
+			copyImage=true ;;
 		d)
 			# set delay value
 			delaySeconds="${OPTARG}"
