@@ -40,7 +40,7 @@ delaySeconds='0'
 # hosts and shorteners
 host='fiery'
 shortener=
-hosts='uguu 0x0 fiery'
+hosts='uguu teknik 0x0 fiery'
 shorteners='waaai 0x0'
 
 ## FUNCTIONS
@@ -65,7 +65,7 @@ Options:
 	-d		Delay the screenshot by the specified number of seconds.
 	-f		Take a fullscreen screenshot.
 	-h		Show this help message.
-	-o <host>	Select which host to use (uguu, 0x0 or fiery).
+	-o <host>	Select which host to use (uguu, teknik, 0x0 or fiery).
 	-p <path>	Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
 	-c		Copy image instead of URL to clipboard.
 	-n		Enable save notification (if used alongside -p option).
@@ -144,8 +144,9 @@ upload() {
 		i="$((i+1))"
 
 		case "${host}" in
-			0x0) hostURL='https://0x0.st/' ;;
 			uguu) hostURL='https://uguu.se/api.php?d=upload-tool' ;;
+			teknik) hostURL='https://api.teknik.io/v1/Upload' ;;
+			0x0) hostURL='https://0x0.st/' ;;
 			fiery) hostURL='https://safe.fiery.me/api/upload' ;;
 		esac
 
@@ -156,6 +157,10 @@ upload() {
 
 		if [ "${host}" = 'uguu' ]; then
 			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
+		elif [ "${host}" = 'teknik' ]; then
+			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
+			uploadResult="${uploadResult##*url\":\"}"
+			uploadResult="${uploadResult%%\"*}"
 		elif [ "${host}" = '0x0' ]; then
 			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
 		elif [ "${host}" = 'fiery' ]; then
