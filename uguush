@@ -200,7 +200,7 @@ upload() {
 					notify-send "uguu~" "Link copied to clipboard: ${finalResult}" -h string:x-canonical-private-synchronous:uguush -i "url-copy"
 				fi
 			fi
-			echo "$(date +"%D %R") | "${file}" | "${finalResult}"" >> ~/.uguush.log
+			echo "$(date +"%D %R") | "${localFile}" | "${finalResult}"" >> ~/.uguush.log
 			echo "[${c2}OK${c0}]"
 			echo "File has been uploaded: ${finalResult}"
 		fi
