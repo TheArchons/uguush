@@ -83,6 +83,22 @@ Options:
 EOF
 }
 
+# id for notification
+if [ "$(command -v notify-send)" ]; then
+	notifyId="uguush-$(date +%s)"
+fi
+
+notify() {
+	if [ "${notifyId}" ]; then
+		notify-send \
+			-a "uguush" \
+			-h "string:x-canonical-private-synchronous:${notifyId}" \
+			-h "string:private-synchronous:${notifyId}" \
+			-i "${2}" \
+			"uguu~" "${1}"
+	fi
+}
+
 delay() {
 	i="$delaySeconds"
 	while [ "$i" -gt 0 ]; do
@@ -93,7 +109,7 @@ delay() {
 }
 
 screenshot() {
-	if [ "${useSpectacle}" = 'true' ] && [ -x "$(command -v spectacle)" ]; then
+	if [ "${useSpectacle}" ] && [ -x "$(command -v spectacle)" ]; then
 		screenshotFullscreen="spectacle -bno"
 		screenshotSelection="spectacle -rbno"
 		screenshotWindow="spectacle -abno"
@@ -122,7 +138,7 @@ screenshot() {
 		fi
 	elif [ "${doWindow}" ]; then
 		capWindow
-	elif [ "${doURL}" = 'true' ]; then
+	elif [ "${doURL}" ]; then
 		if [ -f "/usr/share/mime/globs" ]; then
 			urlExtension="$(curl -sf --head "${remoteURL}" | grep -i 'Content-Type: ' | head -1 | grep -Po '(?<=\ )[^\;]*')"
 			urlExtension="$(echo "${urlExtension}" | sed -e "s/\\r//")"
@@ -141,6 +157,11 @@ upload() {
 	i="1"
 	while [ "$i" -lt 4 ]; do
 		printf "Try #${i}... "
+
+		#if [ ! "${noComms}" ]; then
+		#	notify "Uploading attempt #${i}..." "cloud-upload"
+		#fi
+
 		i="$((i+1))"
 
 		case "${host}" in
@@ -197,12 +218,12 @@ upload() {
 		if [ "${?}" = 0 ]; then
 			# copy to clipboard, log, and notify (unless $noComms is set)
 			if [ ! "${noComms}" ]; then
-				if [ "${copyImage}" = 'true' ]; then
-					notify-send "uguu~" "Link to screenshot: ${finalResult}" -h string:x-canonical-private-synchronous:uguush -i "link"
+				if [ "${copyImage}" ]; then
+					notify "Link to screenshot:\n${finalResult}" "link"
 				else
 					echo -n "${finalResult}" | xclip -selection primary
 					echo -n "${finalResult}" | xclip -selection clipboard
-					notify-send "uguu~" "Link copied to clipboard: ${finalResult}" -h string:x-canonical-private-synchronous:uguush -i "url-copy"
+					notify "Link copied to clipboard:\n${finalResult}" "url-copy"
 				fi
 			fi
 			echo "$(date +"%D %R") | "${localFile}" | "${finalResult}"" >> ~/.uguush.log
@@ -211,7 +232,7 @@ upload() {
 		fi
 
 		# if we took a screenshot, remove the temporary file
-		if [ -z "${doFile}" ]; then
+		if [ ! "${doFile}" ]; then
 			rm "${localFile}"
 		fi
 
@@ -220,17 +241,17 @@ upload() {
 }
 
 copyimage() {
-	if [ ! "${noComms}" ] && [ "${copyImage}" = 'true' ]; then
+	if [ ! "${noComms}" ] && [ "${copyImage}" ]; then
 		mimeType=$(file -b --mime-type "$localFile")
 		xclip -selection primary -t "$mimeType" < "$localFile"
 		xclip -selection clipboard -t "$mimeType" < "$localFile"
-		notify-send "uguu~" "Screenshot copied to clipboard" -h string:x-canonical-private-synchronous:uguush -i "edit-copy"
+		notify "Screenshot copied to clipboard" "edit-copy"
 	fi
 }
 
 path() {
-	if [ "${saveToPath}" = 'true' ]; then
-		if [ "${useSpectacle}" = 'true' ]; then
+	if [ "${saveToPath}" ]; then
+		if [ "${useSpectacle}" ]; then
 			# this is Spectacle's default naming format
 			localFilename="$(date '+Screenshot_%Y%m%d_%H%M%S')";
 		else
@@ -238,8 +259,8 @@ path() {
 		fi
 
 		cp ${localFile} "${pathToSave}/${localFilename}.png"
-		if [ $? -eq 0 ] && [ "${notifySave}" = 'true' ]; then
-			notify-send "uguu~" "A screenshot was saved as '${localFilename}.png' to '${pathToSave}'" -h string:x-canonical-private-synchronous:uguush -i document-save
+		if [ $? -eq 0 ] && [ "${notifySave}" ]; then
+			notify "A screenshot was saved as '${localFilename}.png' to '${pathToSave}'" "document-save"
 		fi
 	fi
 }
@@ -272,14 +293,14 @@ while getopts :a:cd:fhikl:no:p:st:u:wxD:S: opt ;do
 			exit 0 ;;
 		k)
 			# use Spectacle of KDE Plasma
-			useSpectacle='true' ;;
+			useSpectacle=true ;;
 		l)
 			# set url to upload
 			doURL=true
 			remoteURL="${OPTARG}" ;;
 		n)
 			# enable save notification
-			notifySave='true' ;;
+			notifySave=true ;;
 		o)
 			# set host
 			for available in ${hosts}; do
@@ -300,7 +321,7 @@ while getopts :a:cd:fhikl:no:p:st:u:wxD:S: opt ;do
 			fi ;;
 		s)
 			# take shot of selection
-			doSelection='true' ;;
+			doSelection=true ;;
 		t)
 			# use fiery token
 			fieryToken="${OPTARG}" ;;
@@ -318,7 +339,7 @@ while getopts :a:cd:fhikl:no:p:st:u:wxD:S: opt ;do
 			doWindow=true ;;
 		x)
 			# do not notify dbus, update log, or modify clipboard
-			noComms='true' ;;
+			noComms=true ;;
 		D)
 			# set fiery domain
 			fieryDomain="${OPTARG}" ;;
@@ -357,10 +378,15 @@ fi
 ## EXECUTE FUNCTIONS
 
 depends
-delay
-screenshot
-copyimage
-path
+
+# if not uploading a local file
+if [ ! "${doFile}" ]; then
+	delay
+	screenshot
+	copyimage
+	path
+fi
+
 upload
 
 # if the program doesn't exit at the for-loop, the upload failed
