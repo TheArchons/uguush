@@ -46,15 +46,13 @@ Options:
 
 ## Custom fiery domain
 
-safe.fiery.me have some custom domains which redirects to i.fiery.me (the domain which serve all the files uploaded into safe.fiery.me), such as:
+Read more about this at: [https://blog.fiery.me/update-about-will-always-want-me](https://blog.fiery.me/update-about-will-always-want-me).
 
-- nekos.will-always-want.me
-- everyone.will-always-want.me
-- [and more (the article's comments)](https://blog.fiery.me/2018/09/29/Extra-domain/)
+e.g. `-D your-hot-neighbor.will-always-want.me`.
 
-So the `-D <domain>` option was added to automatically replace i.fiery.me with your desired domain (e.g. `-D nekos.will-always-want.me`).
+Keep in mind that the domains will only redirect to the actual file in `i.fiery.me` instead of masking the original URL.
 
-Keep in mind that the domains will only redirect to the actual file in i.fiery.me instead of masking the original URL.
+It should work pretty well with chat apps that allow link previews though (e.g. Discord).
 
 ## Screenshot tool requirements
 

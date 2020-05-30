@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# You basically bind this script to your custom keybinds instead of the main script.
+# e.g.
+# /path/to/uguush-my-tpl -s # for selection screenshot.
+# /path/to/uguush-my-tpl -s -d 3 # for selection screenshot that's delayed by 3 seconds.
+
+# Array of random custom fiery domains to use.
+# Look up what characters need to be escaped when using 'sed'.
+MY_CUSTOM_DOMAINS=(
+	"subdomain.will-always-want.me"
+	"subdomain.will-always-want.me\/but-with-paths\/since\/the-domain-supports-unlimited\/paths"
+)
+
+MY_SAVE_PATH=""
+MY_TOKEN=""
+MY_ALBUM_ID=""
+
+# Choose a random domain from the array.
+DOMAIN=${MY_CUSTOM_DOMAINS[$RANDOM % ${#MY_CUSTOM_DOMAINS[@]} ]}
+
+# This will use KDE/Spectacle and save the screenshots to MY_SAVE_PATH.
+# It will also store the uploads into the fiery album with MY_ALBUM_ID.
+uguush -p "$MY_SAVE_PATH" -kn -t $MY_TOKEN -a $MY_ALBUM_ID -D "$DOMAIN" "$@"

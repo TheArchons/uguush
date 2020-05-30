@@ -155,12 +155,12 @@ screenshot() {
 
 upload() {
 	i="1"
-	while [ "$i" -lt 4 ]; do
+	while [ "$i" -le 3 ]; do
 		printf "Try #${i}... "
 
-		#if [ ! "${noComms}" ]; then
-		#	notify "Uploading attempt #${i}..." "cloud-upload"
-		#fi
+		if [ ! "${noComms}" ]; then
+			notify "Uploading attempt #${i}..." "cloud-upload"
+		fi
 
 		i="$((i+1))"
 
@@ -188,7 +188,7 @@ upload() {
 			uploadResult="$(curl -H "token: ${fieryToken}" -H "albumid: ${fieryAlbumId}" -sf -F files[]="@${localFile}" "${hostURL}")"
 			uploadResult="$(echo "${uploadResult}" | grep -Po '"url":"[A-Za-z0-9]+.*?"' | sed 's/"url":"//;s/"//')"
 			if [ "${fieryDomain}" ]; then
-				uploadResult="$(echo "${uploadResult}" | sed "s/i.fiery.me/${fieryDomain}/")"
+				uploadResult="$(echo "${uploadResult}" | sed "s/i.fiery.me\//${fieryDomain}\//")"
 			fi
 		fi
 
@@ -215,7 +215,12 @@ upload() {
 			finalResult="${uploadResult}"
 		fi
 
-		if [ "${?}" = 0 ]; then
+		# if we took a screenshot, remove the temporary file
+		if [ ! "${doFile}" ]; then
+			rm "${localFile}"
+		fi
+
+		if [ "${finalResult}" ]; then
 			# copy to clipboard, log, and notify (unless $noComms is set)
 			if [ ! "${noComms}" ]; then
 				if [ "${copyImage}" ]; then
@@ -229,14 +234,10 @@ upload() {
 			echo "$(date +"%D %R") | "${localFile}" | "${finalResult}"" >> ~/.uguush.log
 			echo "[${c2}OK${c0}]"
 			echo "File has been uploaded: ${finalResult}"
+			exit
+		else
+			continue
 		fi
-
-		# if we took a screenshot, remove the temporary file
-		if [ ! "${doFile}" ]; then
-			rm "${localFile}"
-		fi
-
-		exit
 	done
 }
 
