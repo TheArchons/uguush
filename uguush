@@ -72,6 +72,7 @@ Options:
 	-s		Take a selection screenshot.
 	-u <file>	Upload a file.
 	-x		Do not notify dbus, update the log, or modify the clipboard.
+	-X		Skip upload.
 	-w		Take a screenshot of the current window.
 	-S		Select a shortener to use (waaai or 0x0).
 	-l <url>	Upload the file at the provided URL.
@@ -132,7 +133,7 @@ screenshot() {
 		capFullscreen
 	elif [ "${doSelection}" ]; then
 		capSelection > /dev/null 2>&1
-		if [ ! -s "${localFile}" ]; then
+		if [ ! "${useSpectacle}" ] && [ ! -s "${localFile}" ]; then
 			$(rm "${localFile}" 2> /dev/null)
 			exit
 		fi
@@ -268,7 +269,7 @@ path() {
 
 ## PARSE OPTIONS
 
-while getopts :a:cd:fhikl:no:p:st:u:wxD:S: opt ;do
+while getopts :a:cd:fhikl:no:p:st:u:wxD:S:X opt ;do
 	case "${opt}" in
 		a)
 			# set fiery album id
@@ -354,6 +355,9 @@ while getopts :a:cd:fhikl:no:p:st:u:wxD:S: opt ;do
 				fi
 			done
 			[ "${shortenercheck}" ] || exit 1 ;;
+		X)
+			# skip upload
+			skipUpload=true ;;
 		*)
 			# print help and EXIT_FAILURE
 			usage
@@ -388,7 +392,20 @@ if [ ! "${doFile}" ]; then
 	path
 fi
 
-upload
+if [ "${skipUpload}" ]; then
+	if [ ! "${noComms}" ]; then
+		notify "Screenshot taken, but skipped upload." "document-save"
+	fi
+
+	# if we took a screenshot, remove the temporary file
+	if [ ! "${doFile}" ]; then
+		rm "${localFile}"
+	fi
+
+	exit
+else
+	upload
+fi
 
 # if the program doesn't exit at the for-loop, the upload failed
 echo 'File was not uploaded, did you specify a valid filename?'
