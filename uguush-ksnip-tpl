@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# This is intended to be used with Ksnip (https://github.com/ksnip/ksnip),
+# or other screenshot tools that provide the functionality of uploading with user defined scripts.
+# This expects it to be run with a file path as the first and only paramater.
+
+# In Ksnip, you configure user defined script through:
+# Options > Settings > Uploader > Script Uploader > Script (fill in full path to this script).
+# You may have to untick "Stop when upload script writes to StdErr",
+# as for some reason Ksnip was detecting this script as writing to StdErr even though it shouldn't have.
+# You do not need to tick "Copy script output to clipboard" if you want it to copy the URL,
+# as uguush by default will already do that by itself.
+
+# Array of random custom fiery domains to use.
+# Look up what characters need to be escaped when using 'sed'.
+MY_CUSTOM_DOMAINS=(
+	"subdomain.lolis.cyou"
+	"subdomain.lolis.cyou\/but-with-paths\/since\/the-domain-supports-unlimited\/paths"
+)
+
+MY_TOKEN=""
+MY_ALBUM_ID=""
+
+# Choose a random domain from the array.
+DOMAIN=${MY_CUSTOM_DOMAINS[$RANDOM % ${#MY_CUSTOM_DOMAINS[@]} ]}
+
+# This will store the uploads into the fiery album with MY_ALBUM_ID.
+uguush -t $MY_TOKEN -a $MY_ALBUM_ID -D "$DOMAIN" -u "$@"

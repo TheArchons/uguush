@@ -8,8 +8,8 @@
 # Array of random custom fiery domains to use.
 # Look up what characters need to be escaped when using 'sed'.
 MY_CUSTOM_DOMAINS=(
-	"subdomain.will-always-want.me"
-	"subdomain.will-always-want.me\/but-with-paths\/since\/the-domain-supports-unlimited\/paths"
+	"subdomain.lolis.cyou"
+	"subdomain.lolis.cyou\/but-with-paths\/since\/the-domain-supports-unlimited\/paths"
 )
 
 MY_SAVE_PATH=""

@@ -66,7 +66,7 @@ Options:
 	-f		Take a fullscreen screenshot.
 	-h		Show this help message.
 	-o <host>	Select which host to use (uguu, teknik, 0x0 or fiery).
-	-p <path>	Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
+	-p <path>	Custom path to save the image to (saves as "%Y-%m-%d %H-%M-%S.png").
 	-c		Copy image instead of URL to clipboard.
 	-n		Enable save notification (if used alongside -p option).
 	-s		Take a selection screenshot.
@@ -76,8 +76,8 @@ Options:
 	-w		Take a screenshot of the current window.
 	-S		Select a shortener to use (waaai or 0x0).
 	-l <url>	Upload the file at the provided URL.
-	-g		Use gnome-screenshot (with -p, file name will be "Screenshot from %Y-%m-%d %H-%M-%S.png").
-	-k		Use KDE/Spectacle (with -p, file name will be "Screenshot_%Y%m%d_%H%M%S.png").
+	-g		Use gnome-screenshot (with -p saves as "Screenshot from %Y-%m-%d %H-%M-%S.png").
+	-k		Use KDE/Spectacle (with -p saves as "Screenshot_%Y%m%d_%H%M%S.png").
 	-t <token>	Set token (for fiery host).
 	-a <id>		Set numerical ID of an album (for fiery host).
 	-D <domain>	Set custom fiery domain (only the hostname without protocol).
