@@ -76,7 +76,8 @@ Options:
 	-w		Take a screenshot of the current window.
 	-S		Select a shortener to use (waaai or 0x0).
 	-l <url>	Upload the file at the provided URL.
-	-k		Use KDE/Spectacle (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
+	-g		Use gnome-screenshot (with -p, file name will be "Screenshot from %Y-%m-%d %H-%M-%S.png").
+	-k		Use KDE/Spectacle (with -p, file name will be "Screenshot_%Y%m%d_%H%M%S.png").
 	-t <token>	Set token (for fiery host).
 	-a <id>		Set numerical ID of an album (for fiery host).
 	-D <domain>	Set custom fiery domain (only the hostname without protocol).
@@ -110,7 +111,11 @@ delay() {
 }
 
 screenshot() {
-	if [ "${useSpectacle}" ] && [ -x "$(command -v spectacle)" ]; then
+	if [ "${useGnomeScreenshot}" ] && [ -x "$(command -v gnome-screenshot)" ]; then
+		screenshotFullscreen="gnome-screenshot -f"
+		screenshotSelection="gnome-screenshot -af"
+		screenshotWindow="gnome-screenshot -we shadow -f"
+	elif [ "${useSpectacle}" ] && [ -x "$(command -v spectacle)" ]; then
 		screenshotFullscreen="spectacle -bno"
 		screenshotSelection="spectacle -rbno"
 		screenshotWindow="spectacle -abno"
@@ -253,7 +258,10 @@ copyimage() {
 
 path() {
 	if [ "${saveToPath}" ]; then
-		if [ "${useSpectacle}" ]; then
+		if [ "${useGnomeScreenshot}" ]; then
+			# this is gnome-screenshot's default naming format
+			localFilename="$(date '+Screenshot from %Y-%m-%d %H-%M-%S')";
+		elif [ "${useSpectacle}" ]; then
 			# this is Spectacle's default naming format
 			localFilename="$(date '+Screenshot_%Y%m%d_%H%M%S')";
 		else
@@ -269,7 +277,7 @@ path() {
 
 ## PARSE OPTIONS
 
-while getopts :a:cd:fhikl:no:p:st:u:wxD:S:X opt ;do
+while getopts :a:cd:fhigkl:no:p:st:u:wxD:S:X opt ;do
 	case "${opt}" in
 		a)
 			# set fiery album id
@@ -293,6 +301,9 @@ while getopts :a:cd:fhikl:no:p:st:u:wxD:S:X opt ;do
 			# print help
 			usage
 			exit 0 ;;
+		g)
+			# use gnome-screenshot
+			useGnomeScreenshot=true ;;
 		k)
 			# use Spectacle of KDE Plasma
 			useSpectacle=true ;;
