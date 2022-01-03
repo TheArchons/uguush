@@ -80,7 +80,8 @@ Options:
 	-k		Use KDE/Spectacle (with -p saves as "Screenshot_%Y%m%d_%H%M%S.png").
 	-t <token>	Set token (for fiery host).
 	-a <id>		Set numerical ID of an album (for fiery host).
-	-D <domain>	(DEPRECATED) Set custom fiery domain (only the hostname without protocol).
+	-D <domain>	(DEPRECATED) Set safe.fiery.me file domain.
+	-F <domain>	Set fiery host domain.
 
 EOF
 }
@@ -181,7 +182,13 @@ upload() {
 			uguu) hostURL='https://uguu.se/api.php?d=upload-tool' ;;
 			teknik) hostURL='https://api.teknik.io/v1/Upload' ;;
 			0x0) hostURL='https://0x0.st/' ;;
-			fiery) hostURL='https://safe.fiery.me/api/upload' ;;
+			fiery)
+				if [ "${fieryHostDomain}" ]; then
+					hostURL="${fieryHostDomain}/api/upload"
+				else
+					hostURL='https://safe.fiery.me/api/upload'
+				fi
+				;;
 		esac
 
 		case "${shortener}" in
@@ -200,8 +207,8 @@ upload() {
 		elif [ "${host}" = 'fiery' ]; then
 			uploadResult="$(curl -H "token: ${fieryToken}" -H "albumid: ${fieryAlbumId}" -sf -F files[]="@${localFile}" "${hostURL}")"
 			uploadResult="$(echo "${uploadResult}" | grep -Po '"url":"[A-Za-z0-9]+.*?"' | sed 's/"url":"//;s/"//')"
-			if [ "${fieryDomain}" ]; then
-				uploadResult="$(echo "${uploadResult}" | sed "s/i.fiery.me\//${fieryDomain}\//")"
+			if [ ! "${fieryHostDomain}" ] && [ "${fieryMeDomain}" ]; then
+				uploadResult="$(echo "${uploadResult}" | sed "s/https:\/\/i.fiery.me\//${fieryMeDomain}\//")"
 			fi
 		fi
 
@@ -285,7 +292,9 @@ path() {
 
 ## PARSE OPTIONS
 
-while getopts :a:cd:fhigkl:no:p:st:u:wxD:S:X opt ;do
+httpProtocolRegex='^https?:\/\/'
+
+while getopts :a:cd:fhigkl:no:p:st:u:wxD:F:S:X opt ;do
 	case "${opt}" in
 		a)
 			# set fiery album id
@@ -362,8 +371,17 @@ while getopts :a:cd:fhigkl:no:p:st:u:wxD:S:X opt ;do
 			# do not notify dbus, update log, or modify clipboard
 			noComms=true ;;
 		D)
-			# set fiery domain
-			fieryDomain="${OPTARG}" ;;
+			# set safe.fiery.me file domain
+			fieryMeDomain="${OPTARG}"
+			if [[ ! "${fieryMeDomain}" =~ $httpProtocolRegex ]]; then
+				fieryMeDomain="https:\/\/${fieryMeDomain}"
+			fi ;;
+		F)
+			# set fiery host domain
+			fieryHostDomain="${OPTARG}"
+			if [[ ! "${fieryHostDomain}" =~ $httpProtocolRegex ]]; then
+				fieryHostDomain="https://${fieryHostDomain}"
+			fi ;;
 		S)
 			# set shortener
 			for available in ${shorteners}; do
@@ -387,8 +405,8 @@ done
 # show usage if no action is chosen
 if [ ! "${doFullscreen}" ] && [ ! "${doURL}" ] && [ ! "${doSelection}" ] && [ ! "${doFile}" ] && [ ! "${doWindow}" ]; then
 
-	if [ "${fieryAlbumId}" ] || [ "${fieryToken}" ] || [ "${fieryDomain}" ]; then
-		echo "Fiery-exclusive options must be used during screenshots.
+	if [ "${fieryAlbumId}" ] || [ "${fieryToken}" ] || [ "${fieryMeDomain}" ] || [ "${fieryHostDomain}" ]; then
+		echo "Fiery-specific options must be used during screenshots.
 
 Example: $(basename "${0}") -t TOKEN_HERE -s
 to take a selection screenshot and upload to fiery host using the token." >&2
