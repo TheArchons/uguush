@@ -25,4 +25,4 @@ MY_ALBUM_ID=""
 DOMAIN=${MY_CUSTOM_DOMAINS[$RANDOM % ${#MY_CUSTOM_DOMAINS[@]} ]}
 
 # This will store the uploads into the fiery album with MY_ALBUM_ID.
-uguush -t $MY_TOKEN -a $MY_ALBUM_ID -D "$DOMAIN" -u "$@"
+uguush -o fiery -t $MY_TOKEN -a $MY_ALBUM_ID -D "$DOMAIN" -u "$@"

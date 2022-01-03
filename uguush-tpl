@@ -21,4 +21,4 @@ DOMAIN=${MY_CUSTOM_DOMAINS[$RANDOM % ${#MY_CUSTOM_DOMAINS[@]} ]}
 
 # This will use KDE/Spectacle and save the screenshots to MY_SAVE_PATH.
 # It will also store the uploads into the fiery album with MY_ALBUM_ID.
-uguush -p "$MY_SAVE_PATH" -kn -t $MY_TOKEN -a $MY_ALBUM_ID -D "$DOMAIN" "$@"
+uguush -o fiery -p "$MY_SAVE_PATH" -kn -t $MY_TOKEN -a $MY_ALBUM_ID -D "$DOMAIN" "$@"
