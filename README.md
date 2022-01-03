@@ -68,7 +68,7 @@ You need to have ANY (not ALL) of the following tools:
 
 ## Fiery host domain
 
-This allows using any lolisafe (v3) or forks of BobbyWibowo/lolisafe.
+This allows using any [lolisafe (v3)](https://github.com/WeebDev/chibisafe/tree/v3.0.0) or forks of [BobbyWibowo/lolisafe](https://github.com/BobbyWibowo/lolisafe).
 
 `-o` option must be set to `fiery` since otherwise the script will default to `uguu` file host.
 
