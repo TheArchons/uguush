@@ -221,11 +221,6 @@ upload() {
 			finalResult="${uploadResult}"
 		fi
 
-		# if we took a screenshot, remove the temporary file
-		if [ ! "${doFile}" ]; then
-			rm "${localFile}"
-		fi
-
 		if [ "${finalResult}" ]; then
 			# copy to clipboard, log, and notify (unless $noComms is set)
 			if [ ! "${noComms}" ]; then
@@ -240,6 +235,12 @@ upload() {
 			echo "$(date +"%D %R") | "${localFile}" | "${finalResult}"" >> ~/.uguush.log
 			echo "[${c2}OK${c0}]"
 			echo "File has been uploaded: ${finalResult}"
+
+			# if we took a screenshot, remove the temporary file
+			if [ ! "${doFile}" ]; then
+				rm "${localFile}"
+			fi
+
 			exit
 		else
 			continue
