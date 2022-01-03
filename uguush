@@ -74,13 +74,13 @@ Options:
 	-x		Do not notify dbus, update the log, or modify the clipboard.
 	-X		Skip upload.
 	-w		Take a screenshot of the current window.
-	-S		Select a shortener to use (waaai or 0x0).
+	-S <shortener>	Select a shortener to use (waaai or 0x0).
 	-l <url>	Upload the file at the provided URL.
 	-g		Use gnome-screenshot (with -p saves as "Screenshot from %Y-%m-%d %H-%M-%S.png").
 	-k		Use KDE/Spectacle (with -p saves as "Screenshot_%Y%m%d_%H%M%S.png").
 	-t <token>	Set token (for fiery host).
 	-a <id>		Set numerical ID of an album (for fiery host).
-	-D <domain>	Set custom fiery domain (only the hostname without protocol).
+	-D <domain>	(DEPRECATED) Set custom fiery domain (only the hostname without protocol).
 
 EOF
 }

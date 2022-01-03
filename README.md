@@ -2,7 +2,7 @@
 
 command-line uploader for various file hosts
 
-![Usage](https://i.fiery.me/qqJ1.png)
+![Usage](https://i.fiery.me/mmPx.png)
 
 ## Usage
 
@@ -16,13 +16,13 @@ Options:
 
 `-h` Show this help message.
 
-`-o <host>` Select which host to use (uguu, teknik, 0x0 or fiery).
+`-o <host>` Select which host to use (`uguu`, `teknik`, `0x0` or `fiery`).
 
-`-p <path>` Custom path to save the image to. Saves the image as "%Y-%m-%d %H-%M-%S.png".
+`-p <path>` Custom path to save the image to (saves as `%Y-%m-%d %H-%M-%S.png`).
 
 `-c` Copy image instead of URL to clipboard.
 
-`-n` Enable save notification (if used alongside -p option).
+`-n` Enable save notification (if used alongside `-p` option).
 
 `-s` Take a selection screenshot.
 
@@ -30,21 +30,25 @@ Options:
 
 `-x` Do not notify dbus, update the log, or modify the clipboard.
 
+`-X` Skip upload.
+
 `-w` Take a screenshot of the current window.
 
-`-S` Select a shortener to use (waaai or 0x0).
+`-S <shortener>` Select a shortener to use (`waaai` or `0x0`).
 
 `-l <url>` Upload the file at the provided URL.
 
-`-k` Use KDE/Spectacle (with -p file name will be "Screenshot_%Y%m%d_%H%M%S.png").
+`-g` Use gnome-screenshot (with `-p` saves as `Screenshot from %Y-%m-%d %H-%M-%S.png`).
 
-`-t <token>` Set token (for fiery host).
+`-k` Use KDE/Spectacle (with `-p` saves as `Screenshot_%Y%m%d_%H%M%S.png`).
 
-`-a <id>` Set numerical ID of an album (for fiery host).
+`-t <token>` Set token (for `fiery` host).
 
-`-D <domain>` Set custom fiery domain (only the hostname without protocol).
+`-a <id>` Set numerical ID of an album (for `fiery` host).
 
-## Custom fiery domain
+`-D <domain>` (DEPRECATED) Set custom `fiery` domain (only the hostname without protocol).
+
+## Custom fiery domain (DEPRECATED)
 
 Read more about this at: [https://blog.fiery.me/update-about-will-always-want-me](https://blog.fiery.me/update-about-will-always-want-me).
 
