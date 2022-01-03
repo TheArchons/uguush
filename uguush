@@ -157,6 +157,13 @@ screenshot() {
 		mv "${localTemp}" "${localFile}"
 		$(curl -sf "${remoteURL}" > "${localFile}")
 	fi
+
+	# patch for Spectacle not deleting zero bytes temp file in time when cancelling screenshot
+	fileSize=$(stat --printf="%s" "${localFile}")
+	if [ "${fileSize}" -eq 0 ]; then
+		$(rm "${localFile}" 2> /dev/null)
+		exit
+	fi
 }
 
 upload() {
