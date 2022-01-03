@@ -38,7 +38,7 @@ capWindow() {
 delaySeconds='0'
 
 # hosts and shorteners
-host='fiery'
+host='uguu'
 shortener=
 hosts='uguu teknik 0x0 fiery'
 shorteners='waaai 0x0'
