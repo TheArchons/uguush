@@ -172,7 +172,8 @@ upload() {
 	while [ "$i" -le 3 ]; do
 		printf "Try #${i}... "
 
-		if [ ! "${noComms}" ]; then
+		# only show attempt notify for #2 attempt and onwards
+		if [ ! "${noComms}" ] && [ "$i" -ge 2 ]; then
 			notify "Uploading attempt #${i}..." "cloud-upload"
 		fi
 
