@@ -238,6 +238,11 @@ upload() {
 
 		if [ "${finalResult}" ]; then
 			# copy to clipboard, log, and notify (unless $noComms is set)
+			# add hoster to the beginning of the link if fiery is used so the url will actually work and isn't just a filename
+			if [ "${host}" = 'fiery' ]; then
+				finalResult="${fieryHostDomain}/${finalResult}"
+			fi
+
 			if [ ! "${noComms}" ]; then
 				if [ "${copyImage}" ]; then
 					notify "Link to screenshot:\n${finalResult}" "link"
