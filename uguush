@@ -206,7 +206,7 @@ upload() {
 		elif [ "${host}" = '0x0' ]; then
 			uploadResult="$(curl -sf -F file="@${localFile}" "${hostURL}")"
 		elif [ "${host}" = 'fiery' ]; then
-			uploadResult="$(curl -H "token: ${fieryToken}" -H "albumid: ${fieryAlbumId}" -sf -F files[]="@${localFile}" "${hostURL}")"
+			uploadResult="$(curl -H "token: ${fieryToken}" -H "albumid: ${fieryAlbumId}" -H "filelength: 32" -sf -F files[]="@${localFile}" "${hostURL}")"
 			uploadResult="$(echo "${uploadResult}" | grep -Po '"url":"[A-Za-z0-9]+.*?"' | sed 's/"url":"//;s/"//')"
 			if [ ! "${fieryHostDomain}" ] && [ "${fieryMeDomain}" ]; then
 				uploadResult="$(echo "${uploadResult}" | sed "s/https:\/\/i.fiery.me\//${fieryMeDomain}\//")"
